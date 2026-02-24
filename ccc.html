@@ -123,7 +123,7 @@ function saveAttendance(){
     document.getElementById("attendanceTable").innerHTML);
 }
 
-const students={
+const teachers={
   "5409102": { name: "Aguion Mark Anthony Reyes", schedule:{in:"6:30",out:"1:30"} },
   "5387457": { name: "Baldelovar Jay R. Ramos", schedule:{in:"6:30",out:"1:30"} },
   "5377305": { name: "Campita Mariel Sanchez", schedule:{in:"6:30",out:"2:30"} },
@@ -159,9 +159,10 @@ function onScanSuccess(decodedText){
 
   let msg=document.getElementById("scanMessage");
   let table=document.getElementById("attendanceTable");
-  let student=students[decodedText];
+  let teacher=teachers[decodedText];
+  
 
-  if(!student){
+  if(!teacher){
     msg.innerText="❌ Unknown QR";
     msg.className="error";
     beep(300,200);
@@ -169,10 +170,13 @@ function onScanSuccess(decodedText){
     return;
   }
 
-  let name=student.name;
+  let name=teacher.name;
   let now=new Date();
   let dateStr=now.toLocaleDateString();
   let timeStr=now.toLocaleTimeString();
+
+  if(mode="=== "in"){
+     let status = getStatus(now, teacher.schedule);
 
 
   for(let i=1;i<table.rows.length;i++){
@@ -239,8 +243,8 @@ function markAllAbsent(){
   let now=new Date();
   let dateStr=now.toLocaleDateString();
 
-  for(let id in students){
-    let name=students[id].name;
+  for(let id in teachers){
+    let name=teachers[id].name;
     if(!scanned.includes(name)){
       let row=table.insertRow();
       row.insertCell(0).innerText=name;
