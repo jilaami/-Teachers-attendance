@@ -58,7 +58,7 @@ button {
 
 <body>
 
-<h2>QR Attendance System (Advanced)</h2>
+<h2>QR Attendance System</h2>
 
 <button class="inBtn" onclick="setMode('in')">🟢 Time In</button>
 <button class="outBtn" onclick="setMode('out')">🔵 Time Out</button>
@@ -141,15 +141,20 @@ const teachers={
   "4159406": { name: "Rodriguez Karen Christine Alcantara", schedule:{in:"7:30",out:"2:30"} }
 };
 
-function getStatus(now){
-  let presentCutoff=new Date();
-  presentCutoff.setHours(6,30,0,0);
+function getStatus(now, schedule) {
+   let [inHour, inMin] = schedule.in.split(":").map(Number);
+  let [outHour, outMin] = schedule.out.split(":").map(Number);
 
-  let absentCutoff=new Date();
-  absentCutoff.setHours(12,0,0,0);
+  let presentCutoff = new Date();
+  presentCutoff.setHours(inHour, inMin, 0, 0);
 
-  if(now<=presentCutoff)return "Present";
-  if(now<absentCutoff)return "Late";
+  let absentCutoff = new Date();
+  absentCutoff.setHours(outHour, outMin, 0, 0);
+
+  if (now <= presentCutoff) return "Present";
+  if (now > presentCutoff && now <= absentCutoff) return "Late";
+  return "Absent";
+}
   return "Absent";
 }
 
@@ -175,7 +180,7 @@ function onScanSuccess(decodedText){
   let dateStr=now.toLocaleDateString();
   let timeStr=now.toLocaleTimeString();
 
-  if(mode="=== "in"){
+  if(mode === "in"){
      let status = getStatus(now, teacher.schedule);
 
 
@@ -207,8 +212,8 @@ function onScanSuccess(decodedText){
     }
   }
 
-  if(mode==="in"){
-    let status=getStatus(now);
+  if(mode === "in"){
+    let status=getStatus(now, teacher.schedule);
 
     let row=table.insertRow();
     row.insertCell(0).innerText=name;
