@@ -155,8 +155,6 @@ function getStatus(now, schedule) {
   if (now > presentCutoff && now <= absentCutoff) return "Late";
   return "Absent";
 }
-  return "Absent";
-}
 
 function onScanSuccess(decodedText){
   if(scanLocked)return;
@@ -182,7 +180,6 @@ function onScanSuccess(decodedText){
 
   if(mode === "in"){
      let status = getStatus(now, teacher.schedule);
-
 
   for(let i=1;i<table.rows.length;i++){
     if(table.rows[i].cells[0].innerText===name){
